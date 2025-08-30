@@ -1,18 +1,23 @@
 version: '3.8'
 
 services:
-  db:
+  postgres:
     image: postgres:15
-    container_name: flask_todo_db
+    container_name: university-postgres
+    restart: always
     environment:
-      POSTGRES_USER: todouser
-      POSTGRES_PASSWORD: todopass
-      POSTGRES_DB: todoapp
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "123123"
+      POSTGRES_DB: university_db
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 volumes:
   postgres_data:
